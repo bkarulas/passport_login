@@ -1,0 +1,39 @@
+{
+  "name": "passport_login",
+  "version": "1.0.0",
+  "description": "Configuring passport for secure login",
+  "main": "server.js",
+  "scripts": {
+    "dev-start": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bkarulas/passport_login.git"
+  },
+  "keywords": [
+    "passport",
+    "login"
+  ],
+  "author": "Boris Karulas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bkarulas/passport_login/issues"
+  },
+  "homepage": "https://github.com/bkarulas/passport_login#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
