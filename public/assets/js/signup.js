@@ -1,39 +1,44 @@
 var errorMessage = "";
-$("#signupForm").on("submit", event => {
-    event.preventDefault();
-    console.log("hi");
-    let email = $("#email-input").val().trim();
-    let pw = $("#password-input").val().trim();
-    let firstName = $("#firstname-input").val().trim();
-    let lastName = $("#lastname-input").val().trim();
-    
-    let alert = $("label.alert");
-
-    if(!email || !pw || !firstName || !lastName){
-        alert.text("Please enter all required information");
-        alert.show();
-        return;
-    }        
-    let signupObj = {
-        email: email,
-        password: pw,
-        firstName: firstName,
-        lastName: lastName
-    };
-    
-    errorMessage = ValidateInput(signupObj);
-
-    if(errorMessage.length > 0){
-        alert.html(errorMessage);
-        alert.show();
+document.getElementById('signup-form').addEventListener("click",  e => {
+    e.preventDefault();
+    let fname = document.getElementById('form-fname').value.trim().toLowerCase()
+    let lname = document.getElementById('form-lname').value.trim().toLowerCase()
+    let email = document.getElementById('form-email').value.trim().toLowerCase()
+    let password = document.getElementById('form-password').value
+    console.log(`${fname} - ${lname} - ${email} - ${password}`)
+    let alert = document.getElementById('form-alert');
+    if(!email || !password || !fname || !lname){
+        alert.innerText = "Please enter all required information";
+        alert.style.display = 'block';
         return;
     }
+    let info = {
+        email: email,
+        password: password,
+        firstName: fname,
+        lastName: lname
+    };
 
-    $.post("/api/signup", signupObj)
+    errorMessage = ValidateInput(info);
+
+    if(errorMessage.length > 0){
+        alert.innerHTML = errorMessage;
+        alert.style.display = 'block';
+        return;
+    }   
+
+    fetch("/api/signup",{
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({info})
+    })
     .then(function (res) {
-        window.location.replace("/login");        
-    }).catch(err => {
-        alert.text(err.responseText);
-        alert.show();
-    });           
-});
+        if (res.ok){
+            window.location.replace("/login");
+        }else{
+            alert.innerHTML = 'The email address already exist, please use an new email address';
+            alert.style.display = 'block';
+        }
+                
+    })
+})

@@ -1,35 +1,41 @@
-$(document).ready(function(){
+window.onload = function(){
    
     console.log("page is ready");
-    $("#loginForm").submit( event => {
-        event.preventDefault();
-        let email = $("#email-input").val().trim();
-        let pw = $("#password-input").val().trim();
+    document.getElementById('login-Form').addEventListener("click",  e => {
+        e.preventDefault();
+        let email = document.getElementById('form-email').value.trim().toLowerCase()
+        let password = document.getElementById('form-password').value
 
-        let alert = $("label.alert");
+        let alert = document.getElementById('form-alert');
 
-        if(!email || !pw){
-            alert.text("Please enter your email and password");
-            alert.show();
+        if(!email || !password){
+            alert.innerHTML = "Please enter in both your email and password";
+            alert.style.display = 'block';
             return false;
         }
 
-        let loginObj = {
+        let info = {
             username: email,
-            password: pw
+            password: password
         };
-        
-        $.post("/api/login", loginObj)
+        console.log(info);
+
+        fetch("/api/login",{
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(info)
+        })
         .then(function (response) {
-            console.log('And the response is:... ',response)
+            console.log('And the response is:... ')
+            console.log(response)
             window.location.replace("/");        
         }).catch(err => {
             console.log(err.status);
             if (err.status === 401) {
-                //console.log('ready to send error')
-                alert.text('Invalid user or password');
-                alert.show();
+                alert.innerHTML = "Invalid user or password";
+                alert.style.display = 'block';
             }
         });
     });
-});
+};
+

@@ -16,7 +16,7 @@ function testPassword(pw){
     const pwRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,50}/;
     
     if(!pwRegex.test(pw)){
-        return "*passwords need at least 1 lower case letter, 1 upper case letter, 1 number and is at least 6 characters long\n";
+        return "Password must be atleast 6 characters long, that inclueds at least 1 upper case letter, 1 lower case letter and 1 number\n";
     }
     return "";
 }
@@ -24,16 +24,14 @@ function testPassword(pw){
 function testName(name){
     const nameRegx = /^[^#&<>\"~;$@^%*{}?]{1,50}$/g;
     if(!nameRegx.test(name)){
-        return "*invalid name (unallowed characters or over 50 characters)\n";
+        return "Invalid Name. Do not inclued any special character.\n";
     }
     return "";
 }
 function testEmail(email){
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-    
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if(!emailRegex.test(email)){
-        return "*invalid email address\n";
-        
+        return "*The email address is not valid\n"; 
     }
     return "";
 }

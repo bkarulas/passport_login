@@ -27,7 +27,7 @@ class User {
     }
 
     async getUserByEmail(email){
-        let query=`SELECT * from users where emailaddress = '${email}';`;
+        let query=`SELECT * from users where email = '${email}';`;
         try {
             let result = await this.pool.query(query);
             return result;
@@ -39,7 +39,7 @@ class User {
 
 
     async addNew(id, fname, lname, email, password){
-        let query =`INSERT into users(id, password, emailaddress, fname, lname) 
+        let query =`INSERT into users(id, password, email, fname, lname) 
         VALUES ('${id}','${password}','${email}','${fname}','${lname}');`;
         try {
             await this.pool.query(query);
@@ -52,10 +52,11 @@ class User {
 
     //need to fix
     async emailExists(email){
-            let query=`SELECT * FROM users WHERE emailaddress = '${email}';`
+            let query=`SELECT COUNT(*) AS email FROM users WHERE email = '${email}';`
             try {
                 let result = await this.pool.query(query);
-                if (result.length>1){
+                result = JSON.parse(JSON.stringify(result[0]));
+                if (result[0].email<1){
                     return false
                 }else{
                     return true
@@ -68,7 +69,7 @@ class User {
 
 
     async updateById(password,email,fname,lname){
-        let query=`UPDATE users SET password='${password}', emailaddress='${email}',fname='${fname}',lname='${lname}' WHERE id='${id}'`;
+        let query=`UPDATE users SET password='${password}', email='${email}',fname='${fname}',lname='${lname}' WHERE id='${id}'`;
         try {
             await this.pool.query(query);
             return 1;

@@ -2,8 +2,6 @@ const express = require("express");
 const path = require("path");
 const passport = require("passport");
 const apiRoutes = require("./controller/routes/api-routes");
-const htmlRoutes = require("./controller/routes/html-routes");
-const bodyParser = require("body-parser");
 const session = require('express-session')
 
 require('dotenv').config();
@@ -11,9 +9,15 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Sets up the Express app to handle data parsing
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// // Static directory to be served
+ app.use(express.static("./public"));
+
+
 app.use(session({ 
   secret: process.env.SESSION_SECRET, 
   cookie: { 
@@ -21,8 +25,9 @@ app.use(session({
   }}));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(apiRoutes);
-app.use(htmlRoutes);
+
+require("./controller/routes/html-routes")(app)
+app.use("/api", apiRoutes);
 
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);

@@ -10,14 +10,12 @@ let user = new User();
 
 
 let checkUserExists = function(req, res, next){
-    let email = req.body.email;
+    let email = req.body.info.email;
     let emailExists = user.emailExists(email);
     emailExists.then(function(response){
-        //console.log('response = ',response);
         if (!response) {
             next();
         } else {
-            //console.log('sending error');
             res.status('400').send('ERROR: User with this email already exists');
         }
     })
@@ -34,24 +32,30 @@ let hash = async function(password) {
 
 var apiRoutes = express.Router();
 
-apiRoutes.post('/api/login', passport.authenticate("local", {failureMessage: 'Incorrect user name or password'}), function(req, res){
+apiRoutes.post('/login', passport.authenticate("local", {failureMessage: 'Incorrect user name or password'}), function(req, res){
     res.send('Success');
 });
+
+
+apiRoutes.post('/signup', checkUserExists, async function(req, res){
+    let id = uuidv4();
+    let fname = req.body.info.firstName;
+    let lname = req.body.info.lastName;
+    let email = req.body.info.email;
+    let password = req.body.info.password;
+    let hashed = await hash(password, 10); //hash the password before saving;
+    user.addNew(id, fname, lname, email, hashed)
+    .then(function(response) {res.send('200')})
+    .catch(function(err) {res.status(500).send('There was an error creating user: '+err)});
+});
+
 
 apiRoutes.get('/logout', function(req, res){
     req.logout();
     res.redirect('/login');
 });
 
-apiRoutes.post('/api/signup', checkUserExists, async function(req, res){
-    console.log('ready to insert');
-    let id = uuidv4();
-    let {firstName, lastName, email, password} = req.body;
-    let hashed = await hash(password); //hash the password before saving;
-    user.addNew(id, firstName, lastName, email, hashed)
-    .then(function(response) {res.send('200')})
-    .catch(function(err) {res.status(500).send('There was an error creating user: '+err)});
-});
+
 
 
 module.exports = apiRoutes;

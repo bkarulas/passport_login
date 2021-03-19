@@ -1,5 +1,7 @@
 // Dependencies
 const path = require("path");
+const isAuthenticated = require("../isAuthenticated");
+const notAuthenticated = require("../notAuthenticated")
 
 
 // Routes
@@ -8,16 +10,16 @@ module.exports = function(app) {
   // Each of the below routes just handles the HTML page that the user gets sent to.
 
   // index route loads index.html
-  app.get("/", isAuthenticated,function(req, res) {
-    res.sendFile(path.join(__dirname, "../../public/index.html"));
+  app.get("/", isAuthenticated, function(req, res) {
+    res.sendFile(path.join(__dirname, "../../public/pages/index.html"));
   });
 
-  app.get("/login", function(req, res) {
-    res.sendFile(path.join(__dirname, "../../public/login.html"));
+  app.get("/login", notAuthenticated, function(req, res) {
+    res.sendFile(path.join(__dirname, "../../public/pages/login.html"));
   });
 
-  app.get("/register", function(req, res) {
-    res.sendFile(path.join(__dirname, "../../public/signup.html"));
+  app.get("/signup", notAuthenticated, function(req, res) {
+    res.sendFile(path.join(__dirname, "../../public/pages/signup.html"));
   });
 
 };
